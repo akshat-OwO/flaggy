@@ -1,0 +1,28 @@
+{
+  "name": "@flaggy/db",
+  "version": "0.0.0",
+  "description": "Database package for Flaggy",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schemas/index.ts"
+  },
+  "scripts": {
+    "db:migrate": "drizzle-kit migrate",
+    "db:generate": "drizzle-kit generate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.17.2",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@typescript/native-preview": "7.0.0-dev.20260328.1",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "^6.0.2",
+    "vite-plus": "^0.1.14"
+  }
+}

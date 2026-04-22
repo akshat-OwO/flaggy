@@ -5,7 +5,10 @@ export default defineConfig({
     "*": "vp check --fix",
   },
   fmt: {},
-  lint: { options: { typeAware: true, typeCheck: true } },
+  lint: {
+    options: { typeAware: true, typeCheck: true },
+    ignorePatterns: ["drizzle.config.ts"],
+  },
   run: {
     cache: true,
   },

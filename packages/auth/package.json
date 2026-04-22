@@ -1,0 +1,19 @@
+{
+  "name": "@flaggy/auth",
+  "version": "0.0.0",
+  "description": "Authentication package for Flaggy",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/server.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@typescript/native-preview": "7.0.0-dev.20260328.1",
+    "typescript": "^6.0.2",
+    "vite-plus": "^0.1.14"
+  }
+}
