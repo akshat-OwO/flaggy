@@ -8,7 +8,7 @@
     ".": "./src/server.ts"
   },
   "dependencies": {
-    "better-auth": "^1.6.7"
+    "better-auth": "catalog:"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

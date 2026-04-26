@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from "./routes/__root";
 import { Route as PrivateRouteRouteImport } from "./routes/_private/route";
 import { Route as PrivateIndexRouteImport } from "./routes/_private/index";
 import { Route as PublicAuthRouteImport } from "./routes/_public/auth";
+import { Route as PrivateFlagsIndexRouteImport } from "./routes/_private/flags/index";
 
 const PrivateRouteRoute = PrivateRouteRouteImport.update({
   id: "/_private",
@@ -27,27 +28,40 @@ const PublicAuthRoute = PublicAuthRouteImport.update({
   path: "/auth",
   getParentRoute: () => rootRouteImport,
 } as any);
+const PrivateFlagsIndexRoute = PrivateFlagsIndexRouteImport.update({
+  id: "/flags/",
+  path: "/flags/",
+  getParentRoute: () => PrivateRouteRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof PrivateIndexRoute;
   "/auth": typeof PublicAuthRoute;
+  "/flags/": typeof PrivateFlagsIndexRoute;
 }
 export interface FileRoutesByTo {
   "/auth": typeof PublicAuthRoute;
   "/": typeof PrivateIndexRoute;
+  "/flags": typeof PrivateFlagsIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/_private": typeof PrivateRouteRouteWithChildren;
   "/_public/auth": typeof PublicAuthRoute;
   "/_private/": typeof PrivateIndexRoute;
+  "/_private/flags/": typeof PrivateFlagsIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/auth";
+  fullPaths: "/" | "/auth" | "/flags/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/auth" | "/";
-  id: "__root__" | "/_private" | "/_public/auth" | "/_private/";
+  to: "/auth" | "/" | "/flags";
+  id:
+    | "__root__"
+    | "/_private"
+    | "/_public/auth"
+    | "/_private/"
+    | "/_private/flags/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -78,15 +92,24 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof PublicAuthRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/_private/flags/": {
+      id: "/_private/flags/";
+      path: "/flags";
+      fullPath: "/flags/";
+      preLoaderRoute: typeof PrivateFlagsIndexRouteImport;
+      parentRoute: typeof PrivateRouteRoute;
+    };
   }
 }
 
 interface PrivateRouteRouteChildren {
   PrivateIndexRoute: typeof PrivateIndexRoute;
+  PrivateFlagsIndexRoute: typeof PrivateFlagsIndexRoute;
 }
 
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
   PrivateIndexRoute: PrivateIndexRoute,
+  PrivateFlagsIndexRoute: PrivateFlagsIndexRoute,
 };
 
 const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(

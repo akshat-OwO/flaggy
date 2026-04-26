@@ -1,5 +1,6 @@
 import { Effect, Either } from "effect";
 import { API } from "../lib/api";
+import { Auth } from "../lib/auth";
 
 export const getSessionAction = async () => {
   const program = Effect.gen(function* () {
@@ -14,4 +15,19 @@ export const getSessionAction = async () => {
   }
 
   return result.right;
+};
+
+export const loginAction = async () => {
+  const program = Effect.gen(function* () {
+    const auth = yield* Auth;
+    yield* Effect.tryPromise(() =>
+      auth.signIn.social({
+        provider: "google",
+        callbackURL: `${window.location.origin}/`,
+      }),
+    );
+  }).pipe(Effect.provide(Auth.Default));
+
+  await Effect.runPromise(program);
+  return;
 };
