@@ -2,7 +2,11 @@
   "name": "api",
   "type": "module",
   "exports": {
-    "./client": "./src/client.ts"
+    "./types": {
+      "types": "./src/types.ts",
+      "import": "./src/types.ts",
+      "default": "./src/types.ts"
+    }
   },
   "scripts": {
     "dev": "wrangler dev",
@@ -12,7 +16,9 @@
   "dependencies": {
     "@flaggy/auth": "workspace:*",
     "@flaggy/db": "workspace:*",
-    "hono": "^4.12.14"
+    "effect": "catalog:",
+    "hono": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@types/node": "catalog:",

@@ -4,10 +4,12 @@ export default defineConfig({
   staged: {
     "*": "vp check --fix",
   },
-  fmt: {},
+  fmt: {
+    ignorePatterns: ["routeTree.gen.ts"],
+  },
   lint: {
     options: { typeAware: true, typeCheck: true },
-    ignorePatterns: ["drizzle.config.ts"],
+    ignorePatterns: ["drizzle.config.ts", "routeTree.gen.ts"],
   },
   run: {
     cache: true,

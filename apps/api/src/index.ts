@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { auth } from "./lib/auth";
 import { cors } from "hono/cors";
 
-import authRoutes from "./routes/auth";
+import { sessionHandler } from "./routes/session";
+import { errorHandler } from "./lib/utils";
 
 export interface HonoContext {
   Bindings: CloudflareBindings;
@@ -19,7 +20,7 @@ const app = new Hono<HonoContext>()
       origin: "http://localhost:3000",
       allowHeaders: ["Content-Type", "Authorization"],
       allowMethods: ["POST", "GET", "OPTIONS"],
-      exposeHeaders: ["Content-Length"],
+      exposeHeaders: ["Content-Length", "Cache-Control"],
       maxAge: 600,
       credentials: true,
     }),
@@ -41,10 +42,9 @@ const app = new Hono<HonoContext>()
   .on(["POST", "GET"], "/api/auth*", (c) => {
     return auth.handler(c.req.raw);
   })
-  .route("/auth", authRoutes)
-  .get("/message", (c) => {
-    return c.text("Hello Hono!");
-  });
+  .get("/session", sessionHandler);
+
+app.onError(errorHandler);
 
 export default app;
 export type AppType = typeof app;
