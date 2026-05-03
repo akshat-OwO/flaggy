@@ -1,10 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { AlertTriangle, ArrowRight, Loader, Loader2, PlusIcon } from "lucide-react";
+import { AlertTriangle, ArrowRight, FolderOpen, Loader, Loader2, PlusIcon } from "lucide-react";
 import { Badge } from "@flaggy/ui/components/badge";
 import { Button } from "@flaggy/ui/components/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@flaggy/ui/components/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@flaggy/ui/components/empty";
 import { Form, useAppForm } from "@flaggy/ui/components/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@flaggy/ui/components/popover";
 import { createProjectMutationOptions, getProjectsOptions } from "../../queries/projects";
@@ -127,10 +134,19 @@ function RouteComponent() {
       )}
 
       {!isLoading && !isError && projects && projects.length === 0 && (
-        <p className="text-muted-foreground text-sm">
-          No projects yet. Use <span className="font-medium text-foreground">New project</span>{" "}
-          above or create one from the sidebar.
-        </p>
+        <Empty className="rounded-2xl border border-dashed">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <FolderOpen />
+            </EmptyMedia>
+            <EmptyTitle>No projects yet</EmptyTitle>
+            <EmptyDescription>
+              Create your first project with{" "}
+              <span className="font-medium text-foreground">New project</span> above, or from the
+              sidebar.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
 
       {!isLoading && !isError && projects && projects.length > 0 && (
