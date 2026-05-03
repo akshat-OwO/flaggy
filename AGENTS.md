@@ -38,6 +38,13 @@ Flaggy is a feature flag management platform (monorepo). It has:
    ```
 5. Run migrations: `pnpm --filter @flaggy/db db:migrate`
 
+### Running the full dev stack
+
+1. Start Turso local DB: `turso dev --port 8081` (runs in foreground; use a separate terminal)
+2. Write `apps/api/.dev.vars` (see prerequisites above). Use env vars `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` if available.
+3. Run migrations: `pnpm --filter @flaggy/db db:migrate`
+4. Start everything: `pnpm run dev` (or start API and dashboard individually)
+
 ### Non-obvious caveats
 
 - The **UI package must be built** before the dashboard can start (`pnpm --filter @flaggy/ui build`). In parallel dev mode (`pnpm run dev`), it runs in watch mode automatically.
@@ -46,3 +53,5 @@ Flaggy is a feature flag management platform (monorepo). It has:
 - CORS on the API is hardcoded to allow `http://localhost:3000` (the dashboard dev server origin).
 - Authentication is Google OAuth only. For local development without real Google credentials, the auth endpoints still function (health check, session check) but actual sign-in requires valid `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`.
 - The `pnpm.onlyBuiltDependencies` field in root `package.json` allows build scripts for `esbuild`, `workerd`, `sharp`, and `msw`.
+- Wrangler dev uses the `x` key to exit. After changing `.dev.vars`, restart the API server manually (wrangler does not hot-reload env changes).
+- The Turso CLI binary installs to `~/.turso/`. Add it to PATH: `export PATH="$HOME/.turso:$PATH"`.
