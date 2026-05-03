@@ -66,6 +66,9 @@ catalogs:
     clsx:
       specifier: ^2.1.1
       version: 2.1.1
+    date-fns:
+      specifier: ^4.1.0
+      version: 4.1.0
     effect:
       specifier: ^3.21.2
       version: 3.21.2
@@ -184,6 +187,9 @@ importers:
       better-auth:
         specifier: 'catalog:'
         version: 1.6.7(@tanstack/react-start@1.167.43(@rsbuild/core@2.0.1)(@rspack/core@2.0.0(@swc/helpers@0.5.21))(@voidzero-dev/vite-plus-core@0.1.19(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client@0.17.2)(kysely@0.28.16))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@1.9.12)
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
       effect:
         specifier: 'catalog:'
         version: 3.21.2
