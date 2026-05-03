@@ -1,11 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle, ArrowRight, Loader, Loader2, PlusIcon } from "lucide-react";
 import { Badge } from "@flaggy/ui/components/badge";
 import { Button } from "@flaggy/ui/components/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@flaggy/ui/components/card";
-import { getProjectsOptions } from "../../queries/projects";
+import { Form, useAppForm } from "@flaggy/ui/components/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@flaggy/ui/components/popover";
+import { createProjectMutationOptions, getProjectsOptions } from "../../queries/projects";
+import { createProjectSchema } from "../../schemas/projects";
+import { useState } from "react";
 
 export const Route = createFileRoute("/_private/projects")({
   component: RouteComponent,
@@ -17,6 +21,9 @@ function parseTimestamp(value: Date | string | number): Date {
 }
 
 function RouteComponent() {
+  const [openCreatePopover, setOpenCreatePopover] = useState(false);
+  const queryClient = useQueryClient();
+
   const {
     data: projects,
     isLoading,
@@ -25,13 +32,75 @@ function RouteComponent() {
     isRefetching,
   } = useQuery(getProjectsOptions());
 
+  const { mutate: createProject, isPending } = useMutation({
+    ...createProjectMutationOptions(),
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Failed to create project";
+      form.setFieldMeta("name", (prev) => ({
+        ...prev,
+        isTouched: true,
+        errorMap: { ...prev.errorMap, onSubmit: message },
+      }));
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: getProjectsOptions().queryKey });
+      form.reset();
+      setOpenCreatePopover(false);
+    },
+  });
+
+  const form = useAppForm({
+    defaultValues: {
+      name: "",
+    },
+    validators: {
+      onSubmit: createProjectSchema,
+    },
+    onSubmit: ({ value }) => {
+      createProject(value);
+    },
+  });
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
-      <div>
-        <h1 className="font-semibold text-2xl tracking-tight">Projects</h1>
-        <p className="text-muted-foreground text-sm">
-          Open a project to manage flags and environments.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h1 className="font-semibold text-2xl tracking-tight">Projects</h1>
+          <p className="text-muted-foreground text-sm">
+            Open a project to manage flags and environments.
+          </p>
+        </div>
+        <Popover open={openCreatePopover} onOpenChange={setOpenCreatePopover}>
+          <PopoverTrigger render={<Button />}>
+            <PlusIcon />
+            New project
+          </PopoverTrigger>
+          <PopoverContent side="bottom" align="end">
+            <form.AppForm>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void form.handleSubmit();
+                }}
+                className="flex w-full min-w-[min(100vw-2rem,20rem)] flex-col gap-2"
+              >
+                <form.AppField name="name">
+                  {(field) => <field.TextField label="Project title" />}
+                </form.AppField>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? (
+                    <Loader className="size-4 animate-spin" />
+                  ) : (
+                    <>
+                      Create project
+                      <ArrowRight />
+                    </>
+                  )}
+                </Button>
+              </Form>
+            </form.AppForm>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {isLoading && (
@@ -59,7 +128,8 @@ function RouteComponent() {
 
       {!isLoading && !isError && projects && projects.length === 0 && (
         <p className="text-muted-foreground text-sm">
-          No projects yet. Create one from the sidebar.
+          No projects yet. Use <span className="font-medium text-foreground">New project</span>{" "}
+          above or create one from the sidebar.
         </p>
       )}
 
