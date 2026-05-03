@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect, useLocation } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +12,14 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@flaggy/ui/components/sidebar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@flaggy/ui/components/breadcrumb";
 import { Group } from "@flaggy/ui/components/group";
 import { CogIcon, FlagIcon, LaptopIcon, MoonIcon, SunIcon } from "lucide-react";
 import { getSessionOptions } from "../../queries/auth";
@@ -30,6 +38,12 @@ export const Route = createFileRoute("/_private")({
 
 function RouteComponent() {
   const { theme, setTheme } = useTheme();
+
+  const { pathname } = useLocation();
+
+  const isProjectsHomePage = pathname === "/projects";
+  const isProjectPage = pathname.includes("/p/");
+  const projectSlug = isProjectPage && pathname.split("/")[2];
 
   return (
     <SidebarProvider style={{ "--sidebar-width": "19rem" } as React.CSSProperties}>
@@ -91,6 +105,27 @@ function RouteComponent() {
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
           <SidebarTrigger />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbSeparator>|</BreadcrumbSeparator>
+              {isProjectsHomePage && (
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Projects</BreadcrumbPage>
+                </BreadcrumbItem>
+              )}
+              {isProjectPage && (
+                <>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink render={<Link to="/projects" />}>Projects</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>{projectSlug}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </>
+              )}
+            </BreadcrumbList>
+          </Breadcrumb>
         </header>
         <Outlet />
       </SidebarInset>
