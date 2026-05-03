@@ -20,6 +20,7 @@
     "@vitejs/plugin-react": "catalog:",
     "api": "workspace:*",
     "better-auth": "catalog:",
+    "date-fns": "catalog:",
     "effect": "catalog:",
     "hono": "catalog:",
     "lucide-react": "catalog:",
