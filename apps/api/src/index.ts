@@ -3,6 +3,7 @@ import { auth } from "./lib/auth";
 import { cors } from "hono/cors";
 
 import { sessionHandler } from "./routes/session";
+import projectRoutes from "./routes/projects";
 import { errorHandler } from "./lib/utils";
 
 export interface HonoContext {
@@ -42,7 +43,8 @@ const app = new Hono<HonoContext>()
   .on(["POST", "GET"], "/api/auth*", (c) => {
     return auth.handler(c.req.raw);
   })
-  .get("/session", sessionHandler);
+  .get("/session", sessionHandler)
+  .route("/projects", projectRoutes);
 
 app.onError(errorHandler);
 

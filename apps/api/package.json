@@ -16,6 +16,7 @@
   "dependencies": {
     "@flaggy/auth": "workspace:*",
     "@flaggy/db": "workspace:*",
+    "@hono/zod-validator": "catalog:",
     "effect": "catalog:",
     "hono": "catalog:",
     "zod": "catalog:"

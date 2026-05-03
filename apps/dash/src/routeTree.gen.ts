@@ -12,7 +12,8 @@ import { Route as rootRouteImport } from "./routes/__root";
 import { Route as PrivateRouteRouteImport } from "./routes/_private/route";
 import { Route as PrivateIndexRouteImport } from "./routes/_private/index";
 import { Route as PublicAuthRouteImport } from "./routes/_public/auth";
-import { Route as PrivateFlagsIndexRouteImport } from "./routes/_private/flags/index";
+import { Route as PrivateProjectsRouteImport } from "./routes/_private/projects";
+import { Route as PrivatePProjectSlugRouteImport } from "./routes/_private/p/$projectSlug";
 
 const PrivateRouteRoute = PrivateRouteRouteImport.update({
   id: "/_private",
@@ -28,40 +29,49 @@ const PublicAuthRoute = PublicAuthRouteImport.update({
   path: "/auth",
   getParentRoute: () => rootRouteImport,
 } as any);
-const PrivateFlagsIndexRoute = PrivateFlagsIndexRouteImport.update({
-  id: "/flags/",
-  path: "/flags/",
+const PrivateProjectsRoute = PrivateProjectsRouteImport.update({
+  id: "/projects",
+  path: "/projects",
+  getParentRoute: () => PrivateRouteRoute,
+} as any);
+const PrivatePProjectSlugRoute = PrivatePProjectSlugRouteImport.update({
+  id: "/p/$projectSlug",
+  path: "/p/$projectSlug",
   getParentRoute: () => PrivateRouteRoute,
 } as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof PrivateIndexRoute;
+  "/projects": typeof PrivateProjectsRoute;
   "/auth": typeof PublicAuthRoute;
-  "/flags/": typeof PrivateFlagsIndexRoute;
+  "/p/$projectSlug": typeof PrivatePProjectSlugRoute;
 }
 export interface FileRoutesByTo {
+  "/projects": typeof PrivateProjectsRoute;
   "/auth": typeof PublicAuthRoute;
   "/": typeof PrivateIndexRoute;
-  "/flags": typeof PrivateFlagsIndexRoute;
+  "/p/$projectSlug": typeof PrivatePProjectSlugRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/_private": typeof PrivateRouteRouteWithChildren;
+  "/_private/projects": typeof PrivateProjectsRoute;
   "/_public/auth": typeof PublicAuthRoute;
   "/_private/": typeof PrivateIndexRoute;
-  "/_private/flags/": typeof PrivateFlagsIndexRoute;
+  "/_private/p/$projectSlug": typeof PrivatePProjectSlugRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/auth" | "/flags/";
+  fullPaths: "/" | "/projects" | "/auth" | "/p/$projectSlug";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/auth" | "/" | "/flags";
+  to: "/projects" | "/auth" | "/" | "/p/$projectSlug";
   id:
     | "__root__"
     | "/_private"
+    | "/_private/projects"
     | "/_public/auth"
     | "/_private/"
-    | "/_private/flags/";
+    | "/_private/p/$projectSlug";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
@@ -92,24 +102,33 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof PublicAuthRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/_private/flags/": {
-      id: "/_private/flags/";
-      path: "/flags";
-      fullPath: "/flags/";
-      preLoaderRoute: typeof PrivateFlagsIndexRouteImport;
+    "/_private/projects": {
+      id: "/_private/projects";
+      path: "/projects";
+      fullPath: "/projects";
+      preLoaderRoute: typeof PrivateProjectsRouteImport;
+      parentRoute: typeof PrivateRouteRoute;
+    };
+    "/_private/p/$projectSlug": {
+      id: "/_private/p/$projectSlug";
+      path: "/p/$projectSlug";
+      fullPath: "/p/$projectSlug";
+      preLoaderRoute: typeof PrivatePProjectSlugRouteImport;
       parentRoute: typeof PrivateRouteRoute;
     };
   }
 }
 
 interface PrivateRouteRouteChildren {
+  PrivateProjectsRoute: typeof PrivateProjectsRoute;
   PrivateIndexRoute: typeof PrivateIndexRoute;
-  PrivateFlagsIndexRoute: typeof PrivateFlagsIndexRoute;
+  PrivatePProjectSlugRoute: typeof PrivatePProjectSlugRoute;
 }
 
 const PrivateRouteRouteChildren: PrivateRouteRouteChildren = {
+  PrivateProjectsRoute: PrivateProjectsRoute,
   PrivateIndexRoute: PrivateIndexRoute,
-  PrivateFlagsIndexRoute: PrivateFlagsIndexRoute,
+  PrivatePProjectSlugRoute: PrivatePProjectSlugRoute,
 };
 
 const PrivateRouteRouteWithChildren = PrivateRouteRoute._addFileChildren(

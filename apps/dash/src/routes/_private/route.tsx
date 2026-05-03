@@ -3,14 +3,13 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@flaggy/ui/components/sidebar";
 import { Group } from "@flaggy/ui/components/group";
@@ -18,6 +17,7 @@ import { CogIcon, FlagIcon, LaptopIcon, MoonIcon, SunIcon } from "lucide-react";
 import { getSessionOptions } from "../../queries/auth";
 import { Button } from "@flaggy/ui/components/button";
 import { useTheme } from "../../components/theme-provider";
+import { ProjectSidebarButtons } from "../../components/projects/sidebar-buttons";
 
 export const Route = createFileRoute("/_private")({
   beforeLoad: async ({ context: { queryClient } }) => {
@@ -49,15 +49,7 @@ function RouteComponent() {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <SidebarMenuButton render={<Link to="/flags" />}>Feature flags</SidebarMenuButton>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <ProjectSidebarButtons />
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenu>
@@ -94,6 +86,7 @@ function RouteComponent() {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
+        <SidebarRail />
       </Sidebar>
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
